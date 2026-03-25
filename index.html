@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circular Route Planner</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <h1>Circular Route Planner</h1>
+      <p class="subtitle">Plan a route that starts and ends at the same point</p>
+    </div>
+
+    <div id="sidebar-content">
+      <section class="panel">
+        <h2>Start Point</h2>
+        <div class="input-group">
+          <input
+            type="text"
+            id="start-search"
+            placeholder="Search for a location..."
+            autocomplete="off"
+          />
+          <button id="locate-btn" title="Use my location">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+          </button>
+        </div>
+        <div id="search-results" class="dropdown hidden"></div>
+        <p id="start-coords" class="coords-display">No start point set. Click the map or search above.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Route Options</h2>
+        <div class="form-row">
+          <label for="distance">Target Distance</label>
+          <div class="range-row">
+            <input type="range" id="distance" min="1" max="50" value="5" step="0.5" />
+            <span id="distance-label">5 km</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="profile">Travel Mode</label>
+          <div class="select-wrapper">
+            <select id="profile">
+              <option value="foot-walking">Walking</option>
+              <option value="cycling-regular">Cycling</option>
+              <option value="driving-car">Driving</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="direction">Direction</label>
+          <div class="select-wrapper">
+            <select id="direction">
+              <option value="clockwise">Clockwise</option>
+              <option value="counterclockwise">Counterclockwise</option>
+              <option value="random">Random</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="waypoints">Waypoints</label>
+          <div class="range-row">
+            <input type="range" id="waypoints" min="2" max="8" value="3" step="1" />
+            <span id="waypoints-label">3</span>
+          </div>
+        </div>
+      </section>
+
+      <button id="plan-btn" disabled>Plan Circular Route</button>
+
+      <section id="route-info" class="panel hidden">
+        <h2>Route Summary</h2>
+        <div class="stats-grid">
+          <div class="stat">
+            <span class="stat-value" id="stat-distance">—</span>
+            <span class="stat-label">Distance</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-duration">—</span>
+            <span class="stat-label">Est. Time</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-elevation">—</span>
+            <span class="stat-label">Elevation</span>
+          </div>
+        </div>
+        <div id="turn-by-turn"></div>
+        <button id="regenerate-btn" class="secondary">Try Another Route</button>
+      </section>
+
+      <div id="status" class="status hidden"></div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
