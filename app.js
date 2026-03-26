@@ -307,23 +307,13 @@ async function fetchRoute(profile, points) {
       body: JSON.stringify(body),
     });
   } catch {
-    throw new Error("Network error – could not reach the routing service.");
-  }
-
-  if (res.status === 401 || res.status === 403) {
-    // No API key – build a simulated route from the waypoints
+    // Network blocked or no API key – fall back to simulated route
     return simulateRoute(points);
   }
 
   if (!res.ok) {
-    const txt = await res.text().catch(() => "");
-    // ORS returns error details in JSON
-    let msg = `Routing service error (${res.status}).`;
-    try {
-      const j = JSON.parse(txt);
-      if (j.error?.message) msg = j.error.message;
-    } catch { /* ignore */ }
-    throw new Error(msg);
+    // Any non-2xx (incl. 401/403/429) – fall back to simulated route
+    return simulateRoute(points);
   }
 
   const data = await res.json();
