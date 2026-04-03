@@ -10,9 +10,23 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: #f8fafc;
   color: #1e293b;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+}
+
+/* Canvas dot-grid background */
+.canvas-bg {
+  background-color: #f1f5f9;
+  background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Smooth block selection ring */
+.block-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
 }

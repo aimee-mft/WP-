@@ -5,13 +5,13 @@ import useBuildStore from '../../store/builderStore'
 function Field({ label, children }) {
   return (
     <div className="mb-4">
-      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{label}</label>
+      <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">{label}</label>
       {children}
     </div>
   )
 }
 
-const inputClass = 'w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+const inputClass = 'w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition-shadow'
 const textareaClass = `${inputClass} resize-none`
 
 function TextInput({ value, onChange, placeholder = '' }) {
@@ -51,10 +51,10 @@ function ListEditor({ items = [], onChange, fields }) {
   return (
     <div>
       {items.map((item, i) => (
-        <div key={i} className="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+        <div key={i} className="mb-2 p-3 bg-slate-50 rounded-lg border border-slate-100">
           {fields.map(f => (
             <div key={f.key} className="mb-2">
-              <label className="text-xs text-gray-500 mb-0.5 block">{f.label}</label>
+              <label className="text-xs text-slate-500 mb-0.5 block">{f.label}</label>
               {f.multiline
                 ? <TextArea value={item[f.key]} onChange={v => update(i, f.key, v)} rows={2} />
                 : <TextInput value={item[f.key]} onChange={v => update(i, f.key, v)} placeholder={f.placeholder} />
@@ -64,7 +64,7 @@ function ListEditor({ items = [], onChange, fields }) {
           <button onClick={() => remove(i)} className="text-xs text-red-400 hover:text-red-600 mt-1">Remove</button>
         </div>
       ))}
-      <button onClick={add} className="w-full py-2 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-blue-400 hover:text-blue-500 transition-colors">
+      <button onClick={add} className="w-full py-2 border border-dashed border-gray-300 rounded-lg text-sm text-slate-500 hover:border-blue-400 hover:text-blue-500 transition-colors">
         + Add Item
       </button>
     </div>
@@ -240,17 +240,17 @@ export default function PropertiesPanel() {
   const Editor = block ? EDITORS[block.type] : null
 
   return (
-    <aside className="w-64 flex-none bg-white border-l border-gray-200 flex flex-col overflow-hidden">
+    <aside className="w-64 flex-none bg-white border-l border-slate-200 flex flex-col overflow-hidden">
       {/* Tabs */}
-      <div className="flex border-b border-gray-100">
-        <button
-          className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wide transition-colors ${activeTab === 'block' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-          onClick={() => setActiveTab('block')}
-        >Block</button>
-        <button
-          className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wide transition-colors ${activeTab === 'site' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-          onClick={() => setActiveTab('site')}
-        >Site</button>
+      <div className="flex border-b border-slate-200 bg-slate-50">
+        {['block', 'site'].map(tab => (
+          <button
+            key={tab}
+            className={`flex-1 py-3 text-[11px] font-bold uppercase tracking-widest transition-colors relative
+              ${activeTab === tab ? 'text-blue-600 bg-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
+            onClick={() => setActiveTab(tab)}
+          >{tab}</button>
+        ))}
       </div>
 
       <div className="overflow-y-auto flex-1 p-4">
@@ -258,9 +258,10 @@ export default function PropertiesPanel() {
           <SiteSettings settings={site.settings} update={updateSettings} />
         )}
         {activeTab === 'block' && !block && (
-          <div className="text-center py-12 text-gray-400">
-            <div className="text-3xl mb-2">👆</div>
-            <p className="text-sm">Click a block on the canvas to edit it</p>
+          <div className="flex flex-col items-center text-center py-12 text-slate-400">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl mb-3">✏️</div>
+            <p className="text-sm font-medium text-slate-500 mb-1">No block selected</p>
+            <p className="text-xs text-slate-400">Click any block on the canvas to edit it</p>
           </div>
         )}
         {activeTab === 'block' && block && Editor && (
