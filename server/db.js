@@ -27,6 +27,26 @@ db.exec(`
     sort_order INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (site_id) REFERENCES sites(id) ON DELETE CASCADE
   );
+
+  CREATE TABLE IF NOT EXISTS users (
+    id         TEXT PRIMARY KEY,
+    email      TEXT NOT NULL UNIQUE,
+    password   TEXT NOT NULL,
+    is_admin   INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS sessions (
+    sid    TEXT PRIMARY KEY,
+    sess   TEXT NOT NULL,
+    expire TEXT NOT NULL
+  );
 `)
+
+// Safe one-time column migration — add user_id to sites if missing
+const siteColumns = db.prepare('PRAGMA table_info(sites)').all().map(c => c.name)
+if (!siteColumns.includes('user_id')) {
+  db.exec('ALTER TABLE sites ADD COLUMN user_id TEXT REFERENCES users(id) ON DELETE SET NULL')
+}
 
 export default db

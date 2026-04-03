@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useShallow } from 'zustand/react/shallow'
 import useBuildStore from '../../store/builderStore'
+import useAuthStore from '../../store/authStore'
 import { api } from '../../lib/api'
 
 // SVG icons
@@ -61,6 +62,7 @@ export default function Toolbar() {
     setPreviewWidth: s.setPreviewWidth,
   })))
 
+  const { user, logout } = useAuthStore()
   const [renamingId, setRenamingId] = useState(null)
   const [renameValue, setRenameValue] = useState('')
 
@@ -280,6 +282,43 @@ export default function Toolbar() {
         >
           <DownloadIcon /> Export
         </a>
+
+        {/* Divider */}
+        <div style={{ width: '1px', height: '20px', background: 'var(--md-outline)', margin: '0 4px' }} />
+
+        {/* User avatar + sign out */}
+        {user && (
+          <>
+            <div style={{
+              width: '28px', height: '28px', borderRadius: '50%',
+              background: 'var(--md-primary-container)',
+              color: 'var(--md-primary)', fontWeight: 700, fontSize: '11px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0, title: user.email,
+            }} title={user.email}>
+              {user.email.charAt(0).toUpperCase()}
+            </div>
+            <button
+              onClick={async () => { await logout(); navigate('/login') }}
+              title="Sign out"
+              style={{
+                width: '28px', height: '28px', border: 'none', background: 'transparent',
+                borderRadius: '50%', cursor: 'pointer',
+                color: 'var(--md-on-surface-variant)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--md-surface-variant)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          </>
+        )}
       </div>
 
       {/* Show page close buttons on hover via global style */}

@@ -2,13 +2,13 @@ import { Router } from 'express'
 import JSZip from 'jszip'
 import db from '../db.js'
 import { renderSiteHTML } from '../exporter.js'
+import { requireAuth, requireSiteOwnership } from '../middleware/auth.js'
 
 const router = Router()
 
-// Preview - serves rendered HTML directly
-router.get('/:id/preview', (req, res) => {
+// Preview — serves rendered HTML directly
+router.get('/:id/preview', requireAuth, requireSiteOwnership, (req, res) => {
   const site = db.prepare('SELECT * FROM sites WHERE id = ?').get(req.params.id)
-  if (!site) return res.status(404).send('Site not found')
   const pages = db.prepare('SELECT * FROM pages WHERE site_id = ? ORDER BY sort_order').all(req.params.id)
   const parsed = {
     ...site,
@@ -20,10 +20,9 @@ router.get('/:id/preview', (req, res) => {
   res.send(html)
 })
 
-// Export - sends a zip file
-router.get('/:id/export', async (req, res) => {
+// Export — sends a zip file
+router.get('/:id/export', requireAuth, requireSiteOwnership, async (req, res) => {
   const site = db.prepare('SELECT * FROM sites WHERE id = ?').get(req.params.id)
-  if (!site) return res.status(404).json({ error: 'Not found' })
   const pages = db.prepare('SELECT * FROM pages WHERE site_id = ? ORDER BY sort_order').all(req.params.id)
   const parsed = {
     ...site,

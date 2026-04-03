@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../lib/api'
+import useAuthStore from '../store/authStore'
 
 const TEMPLATES = [
   { id: 'blank',     name: 'Blank',        description: 'Start from scratch',               color: '#E8EAED', textColor: '#5F6368' },
@@ -42,6 +43,7 @@ const PencilIcon = () => (
 
 export default function Dashboard() {
   const navigate = useNavigate()
+  const { user, logout } = useAuthStore()
   const [sites, setSites] = useState([])
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
@@ -111,26 +113,78 @@ export default function Dashboard() {
           }}>CMS</span>
         </div>
 
-        {/* Filled button — MD3 pill */}
-        <button
-          onClick={() => { setShowModal(true); setSiteName(''); setSelectedTemplate('business') }}
-          style={{
-            background: 'var(--md-primary)', color: 'var(--md-on-primary)',
-            border: 'none', borderRadius: 'var(--md-radius-pill)',
-            padding: '0 24px', height: '36px',
-            fontSize: '14px', fontWeight: 500, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: '8px',
-            fontFamily: 'inherit', letterSpacing: '0.01em',
-            transition: 'box-shadow 0.15s, filter 0.15s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.08)'}
-          onMouseLeave={e => e.currentTarget.style.filter = 'none'}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          New Site
-        </button>
+        {/* Right side: new site + user info */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* New Site button */}
+          <button
+            onClick={() => { setShowModal(true); setSiteName(''); setSelectedTemplate('business') }}
+            style={{
+              background: 'var(--md-primary)', color: 'var(--md-on-primary)',
+              border: 'none', borderRadius: 'var(--md-radius-pill)',
+              padding: '0 24px', height: '36px',
+              fontSize: '14px', fontWeight: 500, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: '8px',
+              fontFamily: 'inherit', letterSpacing: '0.01em',
+              transition: 'filter 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.08)'}
+            onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            New Site
+          </button>
+
+          {/* User avatar + email */}
+          {user && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {/* Avatar circle */}
+              <div style={{
+                width: '32px', height: '32px', borderRadius: '50%',
+                background: 'var(--md-primary-container)',
+                color: 'var(--md-primary)', fontWeight: 700, fontSize: '13px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                {user.email.charAt(0).toUpperCase()}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                <span style={{
+                  fontSize: '12px', color: 'var(--md-on-surface)',
+                  maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                }}>{user.email}</span>
+                {user.is_admin ? (
+                  <span style={{
+                    fontSize: '10px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+                    color: 'var(--md-primary)', background: 'var(--md-primary-container)',
+                    padding: '1px 6px', borderRadius: '8px', alignSelf: 'flex-start',
+                  }}>Admin</span>
+                ) : null}
+              </div>
+              {/* Sign out */}
+              <button
+                onClick={async () => { await logout(); navigate('/login') }}
+                title="Sign out"
+                style={{
+                  width: '32px', height: '32px', border: 'none', background: 'transparent',
+                  borderRadius: '50%', cursor: 'pointer',
+                  color: 'var(--md-on-surface-variant)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background 0.15s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--md-surface-variant)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
       {/* Main content */}
