@@ -26,7 +26,7 @@ app.use(express.json({ limit: '10mb' }))
 app.use(session({
   store: new SQLiteStore({
     dir: join(__dirname, '..', 'data'),
-    db: 'cms.db',
+    db: 'sessions.db',
     table: 'sessions',
   }),
   name: 'sid',

@@ -35,13 +35,14 @@ db.exec(`
     is_admin   INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
   );
-
-  CREATE TABLE IF NOT EXISTS sessions (
-    sid    TEXT PRIMARY KEY,
-    sess   TEXT NOT NULL,
-    expire TEXT NOT NULL
-  );
 `)
+
+// Drop stale sessions table if it was created with the wrong schema
+// (connect-sqlite3 needs 'expired' column; old manual schema had 'expire')
+const sessionCols = db.prepare("PRAGMA table_info(sessions)").all().map(c => c.name)
+if (sessionCols.length && !sessionCols.includes('expired')) {
+  db.exec('DROP TABLE sessions')
+}
 
 // Safe one-time column migration — add user_id to sites if missing
 const siteColumns = db.prepare('PRAGMA table_info(sites)').all().map(c => c.name)
