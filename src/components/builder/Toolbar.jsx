@@ -6,7 +6,7 @@ import { api } from '../../lib/api'
 
 export default function Toolbar() {
   const navigate = useNavigate()
-  const { site, activePageId, saving, setActivePage, addPage, renamePage, deletePage } = useBuildStore(useShallow(s => ({
+  const { site, activePageId, saving, setActivePage, addPage, renamePage, deletePage, previewWidth, setPreviewWidth } = useBuildStore(useShallow(s => ({
     site: s.site,
     activePageId: s.activePageId,
     saving: s.saving,
@@ -14,6 +14,8 @@ export default function Toolbar() {
     addPage: s.addPage,
     renamePage: s.renamePage,
     deletePage: s.deletePage,
+    previewWidth: s.previewWidth,
+    setPreviewWidth: s.setPreviewWidth,
   })))
 
   const [renamingId, setRenamingId] = useState(null)
@@ -96,6 +98,22 @@ export default function Toolbar() {
 
       {/* Right actions */}
       <div className="flex items-center gap-2 px-4 border-l border-slate-200">
+        {/* Device width toggle */}
+        <div className="flex items-center bg-slate-100 rounded-lg p-0.5 mr-1">
+          {[
+            { key: 'desktop', title: 'Desktop', icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> },
+            { key: 'tablet',  title: 'Tablet',  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> },
+            { key: 'mobile',  title: 'Mobile',  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> },
+          ].map(({ key, title, icon }) => (
+            <button
+              key={key}
+              title={title}
+              onClick={() => setPreviewWidth(key)}
+              className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${previewWidth === key ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+            >{icon}</button>
+          ))}
+        </div>
+
         {saving && (
           <span className="flex items-center gap-1 text-xs text-slate-400">
             <div className="w-3 h-3 border-2 border-slate-300 border-t-blue-500 rounded-full animate-spin" />

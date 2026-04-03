@@ -1,51 +1,59 @@
 export default function ContactBlock({ props, settings }) {
-  const { title = 'Contact Us', subtitle = '', email = '' } = props
+  const { title = 'Get In Touch', subtitle = "We'd love to hear from you.", email = '' } = props
   const primary = settings?.primaryColor || '#2563eb'
 
   return (
-    <section className="bg-white" style={{ padding: '96px 48px' }}>
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-16 items-start">
+    <section style={{ background: '#fff', padding: '96px 48px' }}>
+      <div style={{ maxWidth: '1040px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'start' }}>
         {/* Left */}
         <div>
-          <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: primary }}>Say Hello</p>
-          <h2 className="font-black text-gray-900 leading-tight mb-6" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.02em' }}>{title}</h2>
-          {subtitle && <p className="text-gray-500 leading-relaxed text-base">{subtitle}</p>}
+          <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: primary, marginBottom: '16px' }}>Contact</p>
+          <h2 style={{ fontSize: '40px', fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a', marginBottom: '20px', lineHeight: 1.1 }}>{title}</h2>
+          {subtitle && <p style={{ fontSize: '16px', lineHeight: 1.75, color: '#64748b' }}>{subtitle}</p>}
           {email && (
-            <p className="mt-8 text-sm text-gray-400">
-              Or email us at <span className="font-semibold text-gray-700">{email}</span>
+            <p style={{ marginTop: '32px', fontSize: '14px', color: '#94a3b8' }}>
+              Or reach us directly at <span style={{ fontWeight: 600, color: '#334155' }}>{email}</span>
             </p>
           )}
         </div>
 
         {/* Right: form */}
-        <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()}>
-          <input
-            type="text"
-            placeholder="Your Name"
-            className="w-full px-0 py-3 border-0 border-b border-gray-200 text-sm bg-transparent focus:outline-none focus:border-gray-900 transition-colors"
-            style={{ borderRadius: 0 }}
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="w-full px-0 py-3 border-0 border-b border-gray-200 text-sm bg-transparent focus:outline-none focus:border-gray-900 transition-colors"
-            style={{ borderRadius: 0 }}
-          />
+        <form style={{ display: 'flex', flexDirection: 'column', gap: '0' }} onSubmit={e => e.preventDefault()}>
+          {['Your Name', 'Email Address'].map((placeholder, i) => (
+            <input
+              key={i}
+              type={i === 1 ? 'email' : 'text'}
+              placeholder={placeholder}
+              style={{
+                width: '100%', padding: '16px 0', background: 'transparent',
+                border: 'none', borderBottom: '1px solid #e2e8f0',
+                fontSize: '15px', color: '#0f172a', outline: 'none',
+                marginBottom: '8px',
+              }}
+            />
+          ))}
           <textarea
             rows={4}
             placeholder="Your Message"
-            className="w-full px-0 py-3 border-0 border-b border-gray-200 text-sm bg-transparent focus:outline-none focus:border-gray-900 transition-colors resize-none"
-            style={{ borderRadius: 0 }}
+            style={{
+              width: '100%', padding: '16px 0', background: 'transparent',
+              border: 'none', borderBottom: '1px solid #e2e8f0',
+              fontSize: '15px', color: '#0f172a', outline: 'none',
+              resize: 'none', marginBottom: '32px',
+            }}
           />
-          <div className="pt-2">
-            <button
-              type="button"
-              className="px-8 py-3 text-sm font-semibold tracking-widest uppercase text-white transition-opacity hover:opacity-90"
-              style={{ background: primary, borderRadius: '2px', letterSpacing: '0.1em' }}
-            >
-              Send Message
-            </button>
-          </div>
+          <button
+            type="button"
+            style={{
+              alignSelf: 'flex-start',
+              padding: '14px 32px', background: primary, color: '#fff',
+              border: 'none', fontSize: '13px', fontWeight: 600,
+              letterSpacing: '0.1em', textTransform: 'uppercase',
+              cursor: 'default', borderRadius: '3px',
+            }}
+          >
+            Send Message
+          </button>
         </form>
       </div>
     </section>

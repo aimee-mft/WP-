@@ -1,23 +1,22 @@
 export default function FeaturesBlock({ props, settings }) {
-  const { title = 'Features', items = [] } = props
+  const { title = 'What We Do', items = [] } = props
   const primary = settings?.primaryColor || '#2563eb'
 
   return (
-    <section className="bg-white" style={{ padding: '96px 48px' }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-16">
-          <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: primary }}>What We Offer</p>
-          <h2 className="font-black text-gray-900 leading-tight" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.02em' }}>{title}</h2>
-        </div>
+    <section style={{ background: '#fff', padding: '96px 48px' }}>
+      <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
+        <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: primary, marginBottom: '16px' }}>Our Services</p>
+        <h2 style={{ fontSize: '40px', fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a', marginBottom: '56px', lineHeight: 1.1 }}>{title}</h2>
+
         {items.length === 0 ? (
-          <p className="text-gray-400 italic">Add feature items in the properties panel →</p>
+          <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>Add feature items in the properties panel →</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100">
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(items.length, 3)}, 1fr)`, gap: '1px', background: '#e2e8f0' }}>
             {items.map((item, i) => (
-              <div key={i} className="bg-white p-10">
-                <div className="text-4xl mb-6">{item.icon || '✨'}</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">{item.title}</h3>
-                <p className="text-gray-500 leading-relaxed text-sm">{item.description}</p>
+              <div key={i} style={{ background: '#fff', padding: '40px 36px' }}>
+                <div style={{ fontSize: '36px', marginBottom: '20px' }}>{item.icon || '✦'}</div>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', marginBottom: '12px', lineHeight: 1.3 }}>{item.title}</h3>
+                <p style={{ fontSize: '15px', color: '#64748b', lineHeight: 1.75 }}>{item.description}</p>
               </div>
             ))}
           </div>

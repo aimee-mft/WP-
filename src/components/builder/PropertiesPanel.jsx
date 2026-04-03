@@ -96,6 +96,7 @@ function HeroProps({ props, update }) {
       <Field label="Button Link"><TextInput value={props.ctaLink} onChange={v => update({ ctaLink: v })} placeholder="https://" /></Field>
       <Field label="Background Color"><ColorInput value={props.backgroundColor} onChange={v => update({ backgroundColor: v })} /></Field>
       <Field label="Text Color"><ColorInput value={props.textColor} onChange={v => update({ textColor: v })} /></Field>
+      <Field label="Background Image URL"><TextInput value={props.backgroundImage} onChange={v => update({ backgroundImage: v })} placeholder="https://images.unsplash.com/..." /></Field>
     </>
   )
 }
@@ -236,22 +237,32 @@ export default function PropertiesPanel() {
 
   const block = selectedBlock()
   const [activeTab, setActiveTab] = useState('block')
-
   const Editor = block ? EDITORS[block.type] : null
+  const blockDef = block ? Object.entries(EDITORS).find(([k]) => k === block.type) : null
 
   return (
     <aside className="w-64 flex-none bg-white border-l border-slate-200 flex flex-col overflow-hidden">
-      {/* Tabs */}
-      <div className="flex border-b border-slate-200 bg-slate-50">
+      {/* Header: tabs */}
+      <div className="flex border-b border-slate-200 bg-slate-50 flex-none">
         {['block', 'site'].map(tab => (
           <button
             key={tab}
-            className={`flex-1 py-3 text-[11px] font-bold uppercase tracking-widest transition-colors relative
+            className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-widest transition-colors relative
               ${activeTab === tab ? 'text-blue-600 bg-white after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
             onClick={() => setActiveTab(tab)}
           >{tab}</button>
         ))}
       </div>
+
+      {/* Block name header */}
+      {activeTab === 'block' && block && (
+        <div className="px-4 py-3 border-b border-slate-100 bg-white flex-none">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Editing</p>
+          <p className="text-sm font-semibold text-slate-800">
+            {block.type.charAt(0).toUpperCase() + block.type.slice(1)} Block
+          </p>
+        </div>
+      )}
 
       <div className="overflow-y-auto flex-1 p-4">
         {activeTab === 'site' && site && (

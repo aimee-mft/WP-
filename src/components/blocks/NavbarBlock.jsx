@@ -1,12 +1,12 @@
 export default function NavbarBlock({ props, settings }) {
   const { logo = 'My Site', links = [] } = props
-  const primary = settings?.primaryColor || '#2563eb'
+  const primary = settings?.primaryColor || '#0f172a'
   return (
-    <nav style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }} className="flex items-center justify-between px-10 py-5 bg-white">
-      <span className="text-xl font-bold tracking-tight" style={{ color: primary }}>{logo}</span>
-      <div className="flex gap-8">
+    <nav className="flex items-center justify-between bg-white" style={{ padding: '20px 48px', borderBottom: '1px solid #f1f5f9' }}>
+      <span style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.02em', color: primary }}>{logo}</span>
+      <div style={{ display: 'flex', gap: '32px' }}>
         {links.map((link, i) => (
-          <span key={i} className="text-sm font-medium text-gray-600 hover:text-gray-900 cursor-default tracking-wide">{link.label}</span>
+          <span key={i} style={{ fontSize: '14px', fontWeight: 500, color: '#64748b', cursor: 'default', letterSpacing: '0.01em' }}>{link.label}</span>
         ))}
       </div>
     </nav>

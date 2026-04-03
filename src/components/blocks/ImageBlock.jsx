@@ -1,17 +1,14 @@
 export default function ImageBlock({ props }) {
-  const { src = 'https://picsum.photos/seed/img/1400/600', caption = '', alt = '' } = props
+  const { src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80&auto=format', caption = '', alt = '' } = props
   return (
-    <section className="bg-white" style={{ padding: '0' }}>
-      <div className="overflow-hidden" style={{ maxHeight: '70vh' }}>
-        <img
-          src={src}
-          alt={alt || caption}
-          className="w-full object-cover"
-          style={{ display: 'block', maxHeight: '70vh' }}
-        />
-      </div>
+    <section style={{ lineHeight: 0 }}>
+      <img
+        src={src}
+        alt={alt || caption}
+        style={{ width: '100%', display: 'block', maxHeight: '520px', objectFit: 'cover' }}
+      />
       {caption && (
-        <p className="text-center text-sm text-gray-400 py-4 px-8">{caption}</p>
+        <p style={{ background: '#fff', padding: '12px 48px', fontSize: '13px', color: '#94a3b8', lineHeight: 1.5, textAlign: 'center' }}>{caption}</p>
       )}
     </section>
   )

@@ -1,30 +1,32 @@
 export default function GalleryBlock({ props, settings }) {
-  const { title = 'Gallery', images = [] } = props
+  const { title = 'Our Work', images = [] } = props
   const primary = settings?.primaryColor || '#2563eb'
 
   return (
-    <section className="bg-white" style={{ padding: '96px 48px' }}>
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-12 flex items-end justify-between">
-          <div>
-            <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: primary }}>Portfolio</p>
-            <h2 className="font-black text-gray-900 leading-tight" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.02em' }}>{title}</h2>
-          </div>
-        </div>
+    <section style={{ background: '#fff', padding: '96px 48px' }}>
+      <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
+        <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: primary, marginBottom: '16px' }}>Portfolio</p>
+        <h2 style={{ fontSize: '40px', fontWeight: 800, letterSpacing: '-0.03em', color: '#0f172a', marginBottom: '48px', lineHeight: 1.1 }}>{title}</h2>
+
         {images.length === 0 ? (
-          <p className="text-gray-400 italic">Add images in the properties panel →</p>
+          <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>Add images in the properties panel →</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
             {images.map((img, i) => (
-              <div key={i} className="group relative overflow-hidden bg-gray-100" style={{ aspectRatio: i % 3 === 0 ? '4/5' : '4/3' }}>
+              <div key={i} style={{
+                position: 'relative',
+                overflow: 'hidden',
+                background: '#f1f5f9',
+                aspectRatio: i % 5 === 0 ? '3/4' : '4/3',
+              }}>
                 <img
-                  src={img.src || `https://picsum.photos/seed/${i + 10}/800/600`}
+                  src={img.src || `https://picsum.photos/seed/${i + 20}/800/600`}
                   alt={img.caption || ''}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
                 {img.caption && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p className="text-white text-sm font-medium">{img.caption}</p>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 14px', background: 'linear-gradient(transparent, rgba(0,0,0,0.6))' }}>
+                    <p style={{ color: '#fff', fontSize: '13px', fontWeight: 500, margin: 0 }}>{img.caption}</p>
                   </div>
                 )}
               </div>

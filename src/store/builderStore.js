@@ -9,6 +9,9 @@ const useBuildStore = create((set, get) => ({
   activePageId: null,
   selectedBlockId: null,
   saving: false,
+  previewWidth: 'desktop', // 'desktop' | 'tablet' | 'mobile'
+
+  setPreviewWidth: (w) => set({ previewWidth: w }),
 
   setSite: (site) => {
     set({ site, activePageId: site.pages[0]?.id ?? null, selectedBlockId: null })

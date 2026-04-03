@@ -23,12 +23,13 @@ export const BLOCK_REGISTRY = {
     icon: '🦸',
     component: HeroBlock,
     defaultProps: {
-      headline: 'Welcome to My Site',
-      subheadline: 'A great tagline that explains what you do.',
+      headline: 'Your Headline Goes Here.',
+      subheadline: 'A compelling one or two sentence description of what you do and who you do it for.',
       ctaText: 'Get Started',
       ctaLink: '#',
-      backgroundColor: '#2563eb',
+      backgroundColor: '#0f172a',
       textColor: '#ffffff',
+      backgroundImage: '',
     },
   },
   features: {

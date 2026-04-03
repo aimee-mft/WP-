@@ -1,57 +1,62 @@
 export default function HeroBlock({ props, settings }) {
   const {
-    headline = 'Welcome to My Site',
-    subheadline = 'A great tagline that explains what you do.',
+    headline = 'Build Something Beautiful.',
+    subheadline = 'A platform designed to help you create, launch, and grow your presence online.',
     ctaText = 'Get Started',
-    backgroundColor = settings?.primaryColor || '#1a1a2e',
+    backgroundColor = '#0f172a',
     textColor = '#ffffff',
+    backgroundImage = '',
   } = props
 
   return (
     <section
-      className="relative flex flex-col justify-end"
       style={{
-        background: backgroundColor,
+        background: backgroundImage
+          ? `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${backgroundImage}) center/cover no-repeat`
+          : backgroundColor,
         color: textColor,
-        minHeight: '82vh',
+        minHeight: '560px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
         padding: '0',
+        position: 'relative',
       }}
     >
-      {/* Subtle texture overlay */}
-      <div className="absolute inset-0 opacity-10"
-        style={{ backgroundImage: 'radial-gradient(ellipse at 20% 80%, rgba(255,255,255,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%)' }} />
-
-      <div className="relative px-12 pb-16 pt-24 max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-end sm:justify-between gap-10">
-        {/* Left: headline */}
-        <div className="flex-1 max-w-2xl">
-          <h1
-            className="font-black leading-none mb-6"
-            style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', color: textColor, letterSpacing: '-0.03em' }}
-          >
-            {headline}
-          </h1>
-          <p
-            className="leading-relaxed opacity-80 max-w-lg"
-            style={{ fontSize: 'clamp(1rem, 1.8vw, 1.2rem)', color: textColor }}
-          >
-            {subheadline}
-          </p>
-        </div>
-
-        {/* Right: CTA */}
-        <div className="flex-none">
-          <button
-            className="px-8 py-4 font-semibold text-sm tracking-widest uppercase transition-all"
-            style={{
-              background: 'transparent',
+      <div style={{ padding: '72px 48px 64px', maxWidth: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '620px' }}>
+          <h1 style={{
+            fontSize: '56px',
+            fontWeight: 800,
+            lineHeight: 1.05,
+            letterSpacing: '-0.03em',
+            color: textColor,
+            margin: 0,
+          }}>{headline}</h1>
+          <p style={{
+            fontSize: '18px',
+            lineHeight: 1.7,
+            color: textColor,
+            opacity: 0.8,
+            margin: 0,
+            maxWidth: '500px',
+          }}>{subheadline}</p>
+          <div>
+            <button style={{
+              marginTop: '8px',
+              padding: '14px 32px',
+              fontSize: '13px',
+              fontWeight: 600,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
               color: textColor,
+              background: 'transparent',
               border: `2px solid ${textColor}`,
-              borderRadius: '2px',
-              letterSpacing: '0.12em',
-            }}
-          >
-            {ctaText}
-          </button>
+              borderRadius: '3px',
+              cursor: 'default',
+              display: 'inline-block',
+            }}>{ctaText}</button>
+          </div>
         </div>
       </div>
     </section>
