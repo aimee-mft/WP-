@@ -4,6 +4,49 @@ import { useShallow } from 'zustand/react/shallow'
 import useBuildStore from '../../store/builderStore'
 import { api } from '../../lib/api'
 
+// SVG icons
+const ArrowBack = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+  </svg>
+)
+const PageIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+  </svg>
+)
+const DesktopIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+  </svg>
+)
+const TabletIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+  </svg>
+)
+const MobileIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+  </svg>
+)
+const EyeIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+  </svg>
+)
+const DownloadIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+)
+
+const DEVICES = [
+  { key: 'desktop', label: 'Desktop', icon: <DesktopIcon /> },
+  { key: 'tablet',  label: 'Tablet',  icon: <TabletIcon /> },
+  { key: 'mobile',  label: 'Mobile',  icon: <MobileIcon /> },
+]
+
 export default function Toolbar() {
   const navigate = useNavigate()
   const { site, activePageId, saving, setActivePage, addPage, renamePage, deletePage, previewWidth, setPreviewWidth } = useBuildStore(useShallow(s => ({
@@ -30,113 +73,219 @@ export default function Toolbar() {
   }
 
   const commitRename = () => {
-    if (renamingId && renameValue.trim()) {
-      renamePage(renamingId, renameValue.trim())
-    }
+    if (renamingId && renameValue.trim()) renamePage(renamingId, renameValue.trim())
     setRenamingId(null)
   }
 
   return (
-    <header className="bg-white border-b border-slate-200 flex items-stretch h-14 flex-none z-20 shadow-sm">
-      {/* Logo / back */}
+    <header style={{
+      background: 'var(--md-surface)',
+      borderBottom: '1px solid var(--md-outline)',
+      height: '56px',
+      display: 'flex',
+      alignItems: 'stretch',
+      flexShrink: 0,
+      zIndex: 20,
+    }}>
+
+      {/* Back / branding */}
       <button
         onClick={() => navigate('/')}
-        className="flex items-center gap-2.5 px-5 border-r border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
         title="Back to dashboard"
+        style={{
+          display: 'flex', alignItems: 'center', gap: '10px',
+          padding: '0 16px', border: 'none', background: 'transparent',
+          borderRight: '1px solid var(--md-outline)',
+          color: 'var(--md-on-surface-variant)', cursor: 'pointer',
+          fontFamily: 'inherit', transition: 'background 0.15s',
+          minWidth: '160px',
+        }}
+        onMouseEnter={e => e.currentTarget.style.background = 'var(--md-surface-variant)'}
+        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
       >
-        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">W</div>
-        <div className="hidden sm:flex flex-col items-start leading-none">
-          <span className="text-xs text-slate-400">WebCraft</span>
-          <span className="text-sm font-semibold text-slate-800 max-w-[140px] truncate">{site.name}</span>
+        <span style={{ color: 'var(--md-on-surface-variant)', display: 'flex' }}><ArrowBack /></span>
+        <div style={{ textAlign: 'left', lineHeight: 1 }}>
+          <div style={{ fontSize: '11px', color: 'var(--md-on-surface-variant)', marginBottom: '3px' }}>WebCraft</div>
+          <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--md-on-surface)', maxWidth: '130px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{site.name}</div>
         </div>
       </button>
 
-      {/* Page tabs */}
-      <div className="flex-1 flex items-stretch overflow-x-auto">
-        {site.pages.map(page => (
-          <div
-            key={page.id}
-            onClick={() => setActivePage(page.id)}
-            className={`flex items-center gap-1.5 px-4 border-r border-slate-100 cursor-pointer text-sm transition-colors whitespace-nowrap group relative select-none
-              ${activePageId === page.id
-                ? 'bg-blue-50 text-blue-700 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 after:rounded-t'
-                : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'}`}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            {renamingId === page.id ? (
-              <input
-                autoFocus
-                value={renameValue}
-                onChange={e => setRenameValue(e.target.value)}
-                onBlur={commitRename}
-                onKeyDown={e => { if (e.key === 'Enter') commitRename(); if (e.key === 'Escape') setRenamingId(null) }}
-                onClick={e => e.stopPropagation()}
-                className="w-24 text-sm border border-blue-400 rounded px-1 focus:outline-none bg-white"
-              />
-            ) : (
-              <>
-                <span onDoubleClick={e => startRename(page, e)}>{page.name}</span>
-                {site.pages.length > 1 && (
-                  <button
-                    onClick={e => { e.stopPropagation(); deletePage(page.id) }}
-                    className="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition-all ml-0.5 leading-none"
-                    title="Delete page"
-                  >×</button>
-                )}
-              </>
-            )}
-          </div>
-        ))}
+      {/* MD3 Primary Tabs — page list */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'stretch', overflowX: 'auto' }}>
+        {site.pages.map(page => {
+          const active = activePageId === page.id
+          return (
+            <div
+              key={page.id}
+              onClick={() => setActivePage(page.id)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '6px',
+                padding: '0 16px', cursor: 'pointer',
+                borderRight: '1px solid var(--md-outline)',
+                fontSize: '14px', fontWeight: active ? 500 : 400,
+                color: active ? 'var(--md-primary)' : 'var(--md-on-surface-variant)',
+                background: active ? 'rgba(26,115,232,0.04)' : 'transparent',
+                position: 'relative', whiteSpace: 'nowrap',
+                transition: 'background 0.15s, color 0.15s',
+                userSelect: 'none',
+              }}
+              onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--md-surface-variant)' }}
+              onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent' }}
+            >
+              {/* Active indicator */}
+              {active && (
+                <div style={{
+                  position: 'absolute', bottom: 0, left: 0, right: 0,
+                  height: '3px', background: 'var(--md-primary)',
+                  borderRadius: '3px 3px 0 0',
+                }} />
+              )}
+              <span style={{ opacity: 0.7 }}><PageIcon /></span>
+              {renamingId === page.id ? (
+                <input
+                  autoFocus
+                  value={renameValue}
+                  onChange={e => setRenameValue(e.target.value)}
+                  onBlur={commitRename}
+                  onKeyDown={e => { if (e.key === 'Enter') commitRename(); if (e.key === 'Escape') setRenamingId(null) }}
+                  onClick={e => e.stopPropagation()}
+                  style={{
+                    width: '96px', fontSize: '14px', padding: '2px 4px',
+                    border: '1px solid var(--md-primary)', borderRadius: '4px',
+                    outline: 'none', background: 'white', fontFamily: 'inherit',
+                  }}
+                />
+              ) : (
+                <>
+                  <span onDoubleClick={e => startRename(page, e)}>{page.name}</span>
+                  {site.pages.length > 1 && (
+                    <button
+                      onClick={e => { e.stopPropagation(); deletePage(page.id) }}
+                      style={{
+                        width: '18px', height: '18px', border: 'none', background: 'transparent',
+                        color: 'var(--md-on-surface-variant)', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        borderRadius: '50%', fontSize: '14px', padding: 0, opacity: 0,
+                        transition: 'opacity 0.15s',
+                      }}
+                      className="page-close-btn"
+                      title="Delete page"
+                    >×</button>
+                  )}
+                </>
+              )}
+            </div>
+          )
+        })}
+        {/* Add page */}
         <button
           onClick={addPage}
-          className="flex items-center gap-1 px-3 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors text-sm font-medium"
+          style={{
+            display: 'flex', alignItems: 'center', gap: '4px',
+            padding: '0 14px', border: 'none', background: 'transparent',
+            color: 'var(--md-on-surface-variant)', cursor: 'pointer',
+            fontSize: '13px', fontWeight: 500, fontFamily: 'inherit',
+            transition: 'background 0.15s, color 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'var(--md-surface-variant)'; e.currentTarget.style.color = 'var(--md-primary)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--md-on-surface-variant)' }}
           title="Add page"
         >
-          <span className="text-base leading-none">+</span> Page
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Page
         </button>
       </div>
 
       {/* Right actions */}
-      <div className="flex items-center gap-2 px-4 border-l border-slate-200">
-        {/* Device width toggle */}
-        <div className="flex items-center bg-slate-100 rounded-lg p-0.5 mr-1">
-          {[
-            { key: 'desktop', title: 'Desktop', icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> },
-            { key: 'tablet',  title: 'Tablet',  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> },
-            { key: 'mobile',  title: 'Mobile',  icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> },
-          ].map(({ key, title, icon }) => (
-            <button
-              key={key}
-              title={title}
-              onClick={() => setPreviewWidth(key)}
-              className={`w-7 h-7 rounded-md flex items-center justify-center transition-colors ${previewWidth === key ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-            >{icon}</button>
-          ))}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '8px',
+        padding: '0 16px', borderLeft: '1px solid var(--md-outline)',
+        flexShrink: 0,
+      }}>
+
+        {/* MD3 Segmented button — device toggle */}
+        <div style={{
+          display: 'flex', alignItems: 'center',
+          border: '1px solid var(--md-outline)',
+          borderRadius: 'var(--md-radius-pill)',
+          overflow: 'hidden', height: '32px',
+        }}>
+          {DEVICES.map(({ key, label, icon }) => {
+            const active = previewWidth === key
+            return (
+              <button
+                key={key}
+                title={label}
+                onClick={() => setPreviewWidth(key)}
+                style={{
+                  width: '40px', height: '32px', border: 'none',
+                  borderLeft: key !== 'desktop' ? '1px solid var(--md-outline)' : 'none',
+                  background: active ? 'var(--md-primary-container)' : 'transparent',
+                  color: active ? 'var(--md-primary)' : 'var(--md-on-surface-variant)',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background 0.15s, color 0.15s',
+                }}
+              >{icon}</button>
+            )
+          })}
         </div>
 
+        {/* Saving indicator */}
         {saving && (
-          <span className="flex items-center gap-1 text-xs text-slate-400">
-            <div className="w-3 h-3 border-2 border-slate-300 border-t-blue-500 rounded-full animate-spin" />
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--md-on-surface-variant)', whiteSpace: 'nowrap' }}>
+            <div style={{
+              width: '12px', height: '12px',
+              border: '2px solid var(--md-primary-container)',
+              borderTopColor: 'var(--md-primary)', borderRadius: '50%',
+              animation: 'spin 0.8s linear infinite',
+            }} />
             Saving
           </span>
         )}
+
+        {/* Preview — outlined pill button */}
         <a
           href={api.previewUrl(site.id)}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 font-medium transition-colors"
+          style={{
+            display: 'flex', alignItems: 'center', gap: '6px',
+            height: '32px', padding: '0 16px',
+            border: '1px solid var(--md-outline)', borderRadius: 'var(--md-radius-pill)',
+            color: 'var(--md-primary)', background: 'transparent',
+            fontSize: '13px', fontWeight: 500, textDecoration: 'none',
+            fontFamily: 'inherit', transition: 'background 0.15s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--md-primary-container)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          Preview
+          <EyeIcon /> Preview
         </a>
+
+        {/* Export — filled pill button */}
         <a
           href={api.exportUrl(site.id)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-sm"
+          style={{
+            display: 'flex', alignItems: 'center', gap: '6px',
+            height: '32px', padding: '0 16px',
+            background: 'var(--md-primary)', borderRadius: 'var(--md-radius-pill)',
+            color: '#fff', fontSize: '13px', fontWeight: 500,
+            textDecoration: 'none', fontFamily: 'inherit',
+            transition: 'filter 0.15s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
+          onMouseLeave={e => e.currentTarget.style.filter = 'none'}
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export
+          <DownloadIcon /> Export
         </a>
       </div>
+
+      {/* Show page close buttons on hover via global style */}
+      <style>{`
+        div:hover > .page-close-btn { opacity: 1 !important; }
+      `}</style>
     </header>
   )
 }

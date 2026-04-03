@@ -2,24 +2,46 @@ import { BLOCK_REGISTRY } from '../blocks/index'
 import useBuildStore from '../../store/builderStore'
 
 const GROUPS = [
-  { label: 'Layout', types: ['navbar', 'hero', 'footer'] },
+  { label: 'Layout',  types: ['navbar', 'hero', 'footer'] },
   { label: 'Content', types: ['text', 'features', 'testimonials'] },
-  { label: 'Media', types: ['image', 'gallery'] },
-  { label: 'Forms', types: ['contact'] },
+  { label: 'Media',   types: ['image', 'gallery'] },
+  { label: 'Forms',   types: ['contact'] },
 ]
 
 export default function BlockLibrary() {
   const addBlock = useBuildStore(s => s.addBlock)
 
   return (
-    <aside className="w-52 flex-none bg-white border-r border-slate-200 flex flex-col overflow-hidden">
-      <div className="px-4 pt-5 pb-3">
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Add Blocks</p>
+    <aside style={{
+      width: '200px',
+      flexShrink: 0,
+      background: 'var(--md-surface)',
+      borderRight: '1px solid var(--md-outline)',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+    }}>
+      {/* Header */}
+      <div style={{ padding: '16px 16px 8px' }}>
+        <p style={{
+          fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: 'var(--md-on-surface-variant)',
+        }}>Blocks</p>
       </div>
-      <div className="overflow-y-auto flex-1 pb-4">
+
+      {/* Block groups */}
+      <div style={{ overflowY: 'auto', flex: 1, paddingBottom: '16px' }}>
         {GROUPS.map(group => (
-          <div key={group.label} className="mb-1">
-            <p className="px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border-y border-slate-100">{group.label}</p>
+          <div key={group.label}>
+            {/* Section label */}
+            <p style={{
+              padding: '12px 16px 4px',
+              fontSize: '11px', fontWeight: 700,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              color: 'var(--md-on-surface-variant)',
+              borderTop: '1px solid var(--md-outline)',
+            }}>{group.label}</p>
+
             {group.types.map(type => {
               const def = BLOCK_REGISTRY[type]
               if (!def) return null
@@ -27,21 +49,41 @@ export default function BlockLibrary() {
                 <button
                   key={type}
                   onClick={() => addBlock(type, def.defaultProps)}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-colors text-left group"
+                  style={{
+                    width: '100%', padding: '8px 16px',
+                    display: 'flex', alignItems: 'center', gap: '12px',
+                    border: 'none', background: 'transparent',
+                    cursor: 'pointer', textAlign: 'left',
+                    fontFamily: 'inherit',
+                    transition: 'background 0.12s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'var(--md-primary-container)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
-                  <span className="w-8 h-8 rounded-lg bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center text-base flex-none transition-colors">
-                    {def.icon}
+                  {/* Icon container — tonal */}
+                  <span style={{
+                    width: '36px', height: '36px', borderRadius: 'var(--md-radius-sm)',
+                    background: 'var(--md-surface-variant)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '16px', flexShrink: 0,
+                  }}>{def.icon}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--md-on-surface)' }}>
+                    {def.label}
                   </span>
-                  <span className="font-medium">{def.label}</span>
                 </button>
               )
             })}
           </div>
         ))}
       </div>
-      <div className="px-4 py-3 border-t border-slate-100">
-        <p className="text-[10px] text-slate-400 text-center">Click to add to canvas</p>
-      </div>
+
+      {/* Footer hint */}
+      <div style={{
+        padding: '10px 16px',
+        borderTop: '1px solid var(--md-outline)',
+        fontSize: '11px', color: 'var(--md-on-surface-variant)',
+        textAlign: 'center',
+      }}>Click to add</div>
     </aside>
   )
 }

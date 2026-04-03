@@ -21,7 +21,8 @@ export default function BlockWrapper({ block, settings }) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.35 : 1,
+    opacity: isDragging ? 0.3 : 1,
+    position: 'relative',
   }
 
   if (!BlockComponent) return null
@@ -29,46 +30,96 @@ export default function BlockWrapper({ block, settings }) {
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className={`relative group cursor-pointer transition-shadow ${isSelected ? 'ring-2 ring-blue-500 ring-inset shadow-lg' : 'hover:ring-1 hover:ring-slate-300 hover:ring-inset'}`}
+      style={{
+        ...style,
+        outline: isSelected
+          ? '2px solid var(--md-primary)'
+          : '1px solid transparent',
+        outlineOffset: '-1px',
+        transition: 'outline 0.1s',
+        cursor: 'pointer',
+      }}
+      className="block-wrapper-group"
       onClick={() => selectBlock(block.id)}
     >
-      {/* Top control bar — visible on hover or select */}
-      <div className={`absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-3 py-1.5 bg-blue-600 transition-opacity ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-        <span className="text-white text-xs font-semibold tracking-wide">
+      {/* Control bar — MD3 style, appears on hover/select */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 12px',
+        height: '32px',
+        background: 'var(--md-primary)',
+        opacity: isSelected ? 1 : 0,
+        transition: 'opacity 0.15s',
+        pointerEvents: isSelected ? 'auto' : 'none',
+      }}
+        className="block-control-bar"
+      >
+        {/* Block label */}
+        <span style={{ color: '#fff', fontSize: '11px', fontWeight: 600, letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
           {def?.icon} {def?.label}
         </span>
-        <div className="flex items-center gap-1">
+
+        {/* Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
           {/* Drag handle */}
           <button
             {...attributes}
             {...listeners}
-            className="w-6 h-6 rounded flex items-center justify-center text-blue-200 hover:text-white hover:bg-blue-500 cursor-grab active:cursor-grabbing transition-colors"
+            style={iconBtnStyle}
             title="Drag to reorder"
             onClick={e => e.stopPropagation()}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/>
+              <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
+              <circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/>
+            </svg>
           </button>
+
           {/* Duplicate */}
           <button
-            className="w-6 h-6 rounded flex items-center justify-center text-blue-200 hover:text-white hover:bg-blue-500 transition-colors"
+            style={iconBtnStyle}
             title="Duplicate"
             onClick={e => { e.stopPropagation(); duplicateBlock(block.id) }}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
           </button>
+
           {/* Delete */}
           <button
-            className="w-6 h-6 rounded flex items-center justify-center text-blue-200 hover:text-white hover:bg-red-500 transition-colors"
+            style={{ ...iconBtnStyle, '--hover-bg': 'rgba(217,48,37,0.8)' }}
             title="Delete"
             onClick={e => { e.stopPropagation(); deleteBlock(block.id) }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(217,48,37,0.8)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
           </button>
         </div>
       </div>
 
+      {/* Hover outline via CSS — only when not selected */}
+      <style>{`
+        .block-wrapper-group:hover .block-control-bar { opacity: 1 !important; pointer-events: auto !important; }
+        .block-wrapper-group:not(.selected):hover { outline: 1px solid var(--md-outline) !important; }
+      `}</style>
+
       <BlockComponent props={block.props} settings={settings} />
     </div>
   )
+}
+
+const iconBtnStyle = {
+  width: '24px', height: '24px', border: 'none',
+  background: 'rgba(255,255,255,0.15)',
+  borderRadius: '4px',
+  color: 'rgba(255,255,255,0.9)',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  cursor: 'pointer', transition: 'background 0.12s',
 }
