@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 import useBuildStore from '../../store/builderStore'
 import { api } from '../../lib/api'
 
 export default function Toolbar() {
   const navigate = useNavigate()
-  const { site, activePageId, saving, setActivePage, addPage, renamePage, deletePage } = useBuildStore(s => ({
+  const { site, activePageId, saving, setActivePage, addPage, renamePage, deletePage } = useBuildStore(useShallow(s => ({
     site: s.site,
     activePageId: s.activePageId,
     saving: s.saving,
@@ -13,7 +14,7 @@ export default function Toolbar() {
     addPage: s.addPage,
     renamePage: s.renamePage,
     deletePage: s.deletePage,
-  }))
+  })))
 
   const [renamingId, setRenamingId] = useState(null)
   const [renameValue, setRenameValue] = useState('')

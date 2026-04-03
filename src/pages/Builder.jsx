@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useShallow } from 'zustand/react/shallow'
 import useBuildStore from '../store/builderStore'
 import { api } from '../lib/api'
 import Toolbar from '../components/builder/Toolbar'
@@ -10,7 +11,7 @@ import PropertiesPanel from '../components/builder/PropertiesPanel'
 export default function Builder() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { site, setSite } = useBuildStore(s => ({ site: s.site, setSite: s.setSite }))
+  const { site, setSite } = useBuildStore(useShallow(s => ({ site: s.site, setSite: s.setSite })))
 
   useEffect(() => {
     api.getSite(id)

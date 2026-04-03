@@ -10,16 +10,17 @@ import {
   verticalListSortingStrategy,
   arrayMove,
 } from '@dnd-kit/sortable'
+import { useShallow } from 'zustand/react/shallow'
 import useBuildStore from '../../store/builderStore'
 import BlockWrapper from './BlockWrapper'
 
 export default function Canvas() {
-  const { site, activePage, reorderBlocks, selectBlock } = useBuildStore(s => ({
+  const { site, activePage, reorderBlocks, selectBlock } = useBuildStore(useShallow(s => ({
     site: s.site,
     activePage: s.activePage,
     reorderBlocks: s.reorderBlocks,
     selectBlock: s.selectBlock,
-  }))
+  })))
 
   const page = activePage()
 

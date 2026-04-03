@@ -1,15 +1,16 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useShallow } from 'zustand/react/shallow'
 import useBuildStore from '../../store/builderStore'
 import { BLOCK_REGISTRY } from '../blocks/index'
 
 export default function BlockWrapper({ block, settings }) {
-  const { selectedBlockId, selectBlock, deleteBlock, duplicateBlock } = useBuildStore(s => ({
+  const { selectedBlockId, selectBlock, deleteBlock, duplicateBlock } = useBuildStore(useShallow(s => ({
     selectedBlockId: s.selectedBlockId,
     selectBlock: s.selectBlock,
     deleteBlock: s.deleteBlock,
     duplicateBlock: s.duplicateBlock,
-  }))
+  })))
 
   const isSelected = selectedBlockId === block.id
   const def = BLOCK_REGISTRY[block.type]

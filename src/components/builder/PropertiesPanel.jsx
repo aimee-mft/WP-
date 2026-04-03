@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import useBuildStore from '../../store/builderStore'
 
 function Field({ label, children }) {
@@ -226,12 +227,12 @@ const EDITORS = {
 }
 
 export default function PropertiesPanel() {
-  const { selectedBlock, updateBlock, site, updateSettings } = useBuildStore(s => ({
+  const { selectedBlock, updateBlock, site, updateSettings } = useBuildStore(useShallow(s => ({
     selectedBlock: s.selectedBlock,
     updateBlock: s.updateBlock,
     site: s.site,
     updateSettings: s.updateSettings,
-  }))
+  })))
 
   const block = selectedBlock()
   const [activeTab, setActiveTab] = useState('block')
